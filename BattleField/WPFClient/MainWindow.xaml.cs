@@ -2,6 +2,7 @@
 using Common.ArmyTypes;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,75 +61,91 @@ namespace WPFClient
 			AI = new ArmyAI(testArmyList);
 			AI.ResetBattle();
 
-			// Player1
-			ArmyBlock a = new ArmyBlock(mainField);
-			mainField.Children.Add(a);
-			armyBlocks.Add(a);
-
-			ArmyBlock a1 = new ArmyBlock(mainField);
-			mainField.Children.Add(a1);
-			armyBlocks.Add(a1);
-
-			ArmyBlock h1 = new ArmyBlock(mainField);
-			mainField.Children.Add(h1);
-			armyBlocks.Add(h1);
-
-			Infantry army1 = new Infantry() { Hp = 100, Position = new System.Drawing.Point(1, 1), Side = BattleSide.Player1 };
-			a.ApplyArmy(army1);
-
-			Infantry army2 = new Infantry() { Hp = 100, Position = new System.Drawing.Point(1, 2), Side = BattleSide.Player1 };
-			a1.ApplyArmy(army2);
-
-			Hero hero1 = new Hero() { Hp = 100, Position = new System.Drawing.Point(0, 2), Type = ArmType.Hero, HeroName = "Ryo", Side = BattleSide.Player1 };
-			h1.ApplyArmy(hero1);
-
-			// Player2
-			ArmyBlock b = new ArmyBlock(mainField);
-			mainField.Children.Add(b);
-			armyBlocks.Add(b);
-
-			ArmyBlock b1 = new ArmyBlock(mainField);
-			mainField.Children.Add(b1);
-			armyBlocks.Add(b1);
-
-			ArmyBlock h2 = new ArmyBlock(mainField);
-			mainField.Children.Add(h2);
-			armyBlocks.Add(h2);
-
-			Cavalry army3 = new Cavalry() { Hp = 100, Position = new System.Drawing.Point(12, 1), Side = BattleSide.Player2 };
-			b.ApplyArmy(army3);
-
-			Lancer army4 = new Lancer() { Hp = 100, Position = new System.Drawing.Point(12, 2), Side = BattleSide.Player2 };
-			b1.ApplyArmy(army4);
-
-			Hero hero2 = new Hero() { Hp = 100, Position = new System.Drawing.Point(13, 2), Type = ArmType.Hero, HeroName = "James", Side = BattleSide.Player2 };
-			h2.ApplyArmy(hero2);
-
-			//set target
-			army1.Target = hero2;
-			army2.Target = hero2;
-			hero1.Target = hero2;
-
-			army3.Target = hero1;
-			army4.Target = hero1;
-			hero2.Target = hero1;
-
-			//Compose army both list follow order
-			testArmyList.Add(army1);
-			testArmyList.Add(army2);
-			testArmyList.Add(hero1);
-			testArmyList.Add(army3);
-			testArmyList.Add(army4);
-			testArmyList.Add(hero2);
-
-			//Init action to forward
-			testArmyList.ForEach((ay) => ay.Action = ActionType.Forward);
+			InitializeBattleField();
 		}
 
 		private void Button_Click_1(object sender, RoutedEventArgs e)
 		{
 			AI.DoAction();
 			BattleTick(testArmyList);
+		}
+
+		private void InitializeBattleField()
+		{
+			Hero hero1 = new Hero() { Hp = 100, Position = new System.Drawing.Point(0, 2), Type = ArmType.Hero, HeroName = "Ryo", Side = BattleSide.Player1 };
+			Hero hero2 = new Hero() { Hp = 100, Position = new System.Drawing.Point(13, 2), Type = ArmType.Hero, HeroName = "James", Side = BattleSide.Player2 };
+
+
+			Dictionary<System.Drawing.Point, ArmType> armyDataPlayer1 = new Dictionary<System.Drawing.Point, ArmType>();
+			armyDataPlayer1[new System.Drawing.Point(0, 0)] = ArmType.Infantry;
+			armyDataPlayer1[new System.Drawing.Point(1, 1)] = ArmType.Infantry;
+			armyDataPlayer1[new System.Drawing.Point(2, 2)] = ArmType.Infantry;
+			armyDataPlayer1[new System.Drawing.Point(3, 3)] = ArmType.Infantry;
+			armyDataPlayer1[new System.Drawing.Point(2, 4)] = ArmType.Infantry;
+			armyDataPlayer1[new System.Drawing.Point(1, 5)] = ArmType.Infantry;
+			armyDataPlayer1[new System.Drawing.Point(0, 6)] = ArmType.Infantry;
+			armyDataPlayer1[new System.Drawing.Point(0, 3)] = ArmType.Hero;
+
+			Dictionary<System.Drawing.Point, ArmType> armyDataPlayer2 = new Dictionary<System.Drawing.Point, ArmType>();
+			armyDataPlayer2[new System.Drawing.Point(13, 0)] = ArmType.Infantry;
+			armyDataPlayer2[new System.Drawing.Point(12, 1)] = ArmType.Infantry;
+			armyDataPlayer2[new System.Drawing.Point(11, 2)] = ArmType.Infantry;
+			armyDataPlayer2[new System.Drawing.Point(10, 3)] = ArmType.Infantry;
+			armyDataPlayer2[new System.Drawing.Point(11, 4)] = ArmType.Infantry;
+			armyDataPlayer2[new System.Drawing.Point(12, 5)] = ArmType.Infantry;
+			armyDataPlayer2[new System.Drawing.Point(13, 6)] = ArmType.Infantry;
+			armyDataPlayer2[new System.Drawing.Point(13, 3)] = ArmType.Hero;
+
+
+			InitializePlayer(armyDataPlayer1, BattleSide.Player1, hero1, hero2);
+			InitializePlayer(armyDataPlayer2, BattleSide.Player2, hero2, hero1);
+		}
+
+		private void InitializePlayer(Dictionary<System.Drawing.Point, ArmType> data, BattleSide side, Hero myHero, Hero enemyHero)
+		{
+			foreach (var item in data)
+			{
+				//Create UI block
+				ArmyBlock block = new ArmyBlock(mainField);
+				mainField.Children.Add(block);
+				armyBlocks.Add(block);
+				//Create Army
+				Army a = null;
+				switch (item.Value)
+				{
+					case ArmType.Archer:
+						{
+							a = new Archer();
+							break;
+						}
+					case ArmType.Cavalry:
+						{
+							a = new Cavalry();
+							break;
+						}
+					case ArmType.Infantry:
+						{
+							a = new Infantry();
+							break;
+						}
+					case ArmType.Lancer:
+						{
+							a = new Lancer();
+							break;
+						}
+					case ArmType.Hero:
+						{
+							a = myHero;
+							break;
+						}
+				}
+				a.Position = item.Key;
+				a.Target = enemyHero;
+				a.Side = side;
+				a.Action = ActionType.Forward;
+				block.ApplyArmy(a);
+				testArmyList.Add(a);
+			}
 		}
 	}
 }

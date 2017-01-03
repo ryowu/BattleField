@@ -15,5 +15,14 @@ namespace Common
 			get { return heroName; }
 			set { heroName = value; }
 		}
+
+		public Hero()
+		{
+			this.type = ArmType.Hero;
+			this.atk = 20;
+			this.def = 6;
+			this.atkAlter = 5;
+			this.action = ActionType.StandBy;
+		}
 	}
 }
