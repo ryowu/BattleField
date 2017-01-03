@@ -22,5 +22,11 @@ namespace Common
 		{
 			return GetRangedValue(value, 0, 100);
 		}
+
+		public static int RandomNum(int min, int max)
+		{
+			Random r = new Random(DateTime.Now.GetHashCode());
+			return r.Next(min, max);
+		}
 	}
 }

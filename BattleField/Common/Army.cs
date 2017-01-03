@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,7 @@ namespace Common
 			set { side = value; }
 		}
 
-		private ArmType type;
+		protected ArmType type;
 
 		public ArmType Type
 		{
@@ -25,7 +26,7 @@ namespace Common
 			set { type = value; }
 		}
 
-		private int hp = 0;
+		protected int hp = 100;
 
 		public int Hp
 		{
@@ -36,9 +37,31 @@ namespace Common
 			}
 		}
 
+		protected int atk;
 
+		public int Atk
+		{
+			get { return atk; }
+			set { atk = value; }
+		}
 
-		private Point position;
+		protected int def;
+
+		public int Def
+		{
+			get { return def; }
+			set { def = value; }
+		}
+
+		protected int atkAlter;
+
+		public int AtkAlter
+		{
+			get { return atkAlter; }
+			set { atkAlter = value; }
+		}
+
+		protected Point position;
 
 		public Point Position
 		{
@@ -46,7 +69,7 @@ namespace Common
 			set { position = value; }
 		}
 
-		private Hero target;
+		protected Hero target;
 
 		public Hero Target
 		{
@@ -54,12 +77,53 @@ namespace Common
 			set { target = value; }
 		}
 
-		private ActionType action = ActionType.StandBy;
+		protected ActionType action = ActionType.StandBy;
 
 		public ActionType Action
 		{
 			get { return action; }
 			set { action = value; }
+		}
+
+		public void DoStandBy()
+		{
+ 			// do nothing for now
+			Debug.WriteLine(this.type.ToString() + " at '" + this.position.X.ToString() + "," + this.position.Y.ToString() + "' standby");
+		}
+
+		public void DoMoveTo(Point newPosition)
+		{
+			Debug.WriteLine(this.type.ToString() + " at '" + this.position.X.ToString() + "," + this.position.Y.ToString() + "' move to '" + newPosition.X.ToString() + "," + newPosition.Y.ToString() + "'");
+
+			if (this.action != ActionType.StandBy)
+				this.position = newPosition;
+		}
+
+		public void DoAttack(Army targetArmy)
+		{
+			int atkAnti = 0;
+
+			if (this.type == ArmType.Infantry && targetArmy.Type == ArmType.Lancer)
+			{
+				atkAnti = 5;
+			}
+			else if (this.type == ArmType.Lancer && targetArmy.Type == ArmType.Cavalry)
+			{
+				atkAnti = 8;
+			}
+			else if (this.type == ArmType.Cavalry && targetArmy.Type == ArmType.Infantry)
+			{
+				atkAnti = 6;
+			}
+			else if (this.type == ArmType.Cavalry && targetArmy.Type == ArmType.Archer)
+			{
+				atkAnti = 10;
+			}
+
+			int damage = this.atk + atkAnti + Utility.RandomNum(0, this.atkAlter);
+			targetArmy.Hp -= damage;
+
+			Debug.WriteLine(this.type.ToString() + " at '" + this.position.X.ToString() + "," + this.position.Y.ToString() + "' attack '" + targetArmy.position.X.ToString() + "," + targetArmy.position.Y.ToString() + "' with damage:" + damage.ToString());
 		}
     }
 }

@@ -34,86 +34,92 @@ namespace Common
 			//Get first/second move target
 			Army firstTargetAmry = null;
 			Army secondTargetArmy = null;
-			if (deltaX == 0 && deltaY != 0)
-			{
-				firstTargetAmry = GetArmyByPosition(currentArmy.Position.X, currentArmy.Position.Y + deltaY);
-				if (firstTargetAmry == null)
-				{
-					//move to first target
-					currentArmy.Position = new System.Drawing.Point(currentArmy.Position.X, currentArmy.Position.Y + deltaY);
-					return;
-				}
-			}
-			else if (deltaX != 0 && deltaY == 0)
-			{
-				firstTargetAmry = GetArmyByPosition(currentArmy.Position.X + deltaX, currentArmy.Position.Y);
-				if (firstTargetAmry == null)
-				{
-					//move to first target
-					currentArmy.Position = new System.Drawing.Point(currentArmy.Position.X + deltaX, currentArmy.Position.Y);
-					return;
-				}
-			}
-			else //deltax&y !=0
-			{
-				firstTargetAmry = GetArmyByPosition(currentArmy.Position.X + deltaX, currentArmy.Position.Y);
-				if (firstTargetAmry == null)
-				{
-					//move to first target
-					currentArmy.Position = new System.Drawing.Point(currentArmy.Position.X + deltaX, currentArmy.Position.Y);
-					return;
-				}
-				secondTargetArmy = GetArmyByPosition(currentArmy.Position.X, currentArmy.Position.Y + deltaY);
-				if (secondTargetArmy == null)
-				{
-					//move to first target
-					currentArmy.Position = new System.Drawing.Point(currentArmy.Position.X, currentArmy.Position.Y + deltaY);
-					return;
-				}
-			}
 
-			if (firstTargetAmry != null)
+			//If current army is archer, attack first
+			bool archerAttacked = false;
+			if (currentArmy.Type == ArmType.Archer)
 			{
-				//If first target is friend
-				if (currentArmy.Side == firstTargetAmry.Side)
+				Army targetArmyForArcher = GetArcherTarget(currentArmy);
+				if (targetArmyForArcher != null)
 				{
-					if (secondTargetArmy != null)
+					currentArmy.DoAttack(targetArmyForArcher);
+					archerAttacked = true;
+				}
+			}
+			
+			if(!archerAttacked)
+			{
+				if (deltaX == 0 && deltaY != 0)
+				{
+					firstTargetAmry = GetArmyByPosition(currentArmy.Position.X, currentArmy.Position.Y + deltaY);
+					if (firstTargetAmry == null)
 					{
-						if (currentArmy.Side == secondTargetArmy.Side)
-						{
-							//standby, do nothing
-						}
-						else
-						{
-							//Attack enemy
-							Attack(secondTargetArmy);
-						}
+						//move to first target
+						currentArmy.DoMoveTo(new System.Drawing.Point(currentArmy.Position.X, currentArmy.Position.Y + deltaY));
+						return;
 					}
 				}
-				else
+				else if (deltaX != 0 && deltaY == 0)
 				{
-					//Attack enemy
-					Attack(firstTargetAmry);
+					firstTargetAmry = GetArmyByPosition(currentArmy.Position.X + deltaX, currentArmy.Position.Y);
+					if (firstTargetAmry == null)
+					{
+						//move to first target
+						currentArmy.DoMoveTo(new System.Drawing.Point(currentArmy.Position.X + deltaX, currentArmy.Position.Y));
+						return;
+					}
+				}
+				else //deltax&y !=0
+				{
+					firstTargetAmry = GetArmyByPosition(currentArmy.Position.X + deltaX, currentArmy.Position.Y);
+					if (firstTargetAmry == null)
+					{
+						//move to first target
+						currentArmy.DoMoveTo(new System.Drawing.Point(currentArmy.Position.X + deltaX, currentArmy.Position.Y));
+						return;
+					}
+					secondTargetArmy = GetArmyByPosition(currentArmy.Position.X, currentArmy.Position.Y + deltaY);
+					if (secondTargetArmy == null)
+					{
+						//move to first target
+						currentArmy.DoMoveTo(new System.Drawing.Point(currentArmy.Position.X, currentArmy.Position.Y + deltaY));
+						return;
+					}
+				}
+
+				if (firstTargetAmry != null)
+				{
+					//If first target is friend
+					if (currentArmy.Side == firstTargetAmry.Side)
+					{
+						if (secondTargetArmy != null)
+						{
+							if (currentArmy.Side == secondTargetArmy.Side)
+							{
+								currentArmy.DoStandBy();
+							}
+							else
+							{
+								//Attack enemy
+								currentArmy.DoAttack(secondTargetArmy);
+							}
+						}
+						else
+							currentArmy.DoStandBy();
+					}
+					else
+					{
+						//Attack enemy
+						currentArmy.DoAttack(firstTargetAmry);
+					}
 				}
 			}
-		}
-
-		private void Attack(Army targetArmy)
-		{
-			targetArmy.Hp -= 10;
-
-			Army currentArmy = armyList[currentIndex];
-			if (currentArmy.Type == ArmType.Infantry && targetArmy.Type == ArmType.Lancer)
-			{
-
-			}
-
 		}
 
 		private Army GetNextArmy()
 		{
 			Army result = null;
-			while(true)
+			while (true)
 			{
 				if (armyList[currentIndex].Hp > 0)
 				{
@@ -134,6 +140,25 @@ namespace Common
 		private Army GetArmyByPosition(int x, int y)
 		{
 			return armyList.Find((a) => a.Hp > 0 && a.Position.X == x && a.Position.Y == y);
+		}
+
+		private Army GetArcherTarget(Army archer)
+		{
+			Army result = null;
+			armyList.ForEach((a) =>
+			{
+				if (a.Side != archer.Side
+					&&
+					(
+						(a.Position.X == archer.Position.X && Math.Abs(a.Position.Y - archer.Position.Y) <= 4)
+						||
+						(a.Position.Y == archer.Position.Y && Math.Abs(a.Position.X - archer.Position.X) <= 4)
+						)
+					)
+					result = a;
+			}
+			);
+			return result;
 		}
 
 		private void MoveToNextIndex()

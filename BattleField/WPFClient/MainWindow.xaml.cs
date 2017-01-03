@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.ArmyTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,10 +73,10 @@ namespace WPFClient
 			mainField.Children.Add(h1);
 			armyBlocks.Add(h1);
 
-			Army army1 = new Army() { Hp = 100, Position = new System.Drawing.Point(1, 1), Type = ArmType.Infantry, Side = BattleSide.Player1 };
+			Infantry army1 = new Infantry() { Hp = 100, Position = new System.Drawing.Point(1, 1), Side = BattleSide.Player1 };
 			a.ApplyArmy(army1);
 
-			Army army2 = new Army() { Hp = 100, Position = new System.Drawing.Point(1, 2), Type = ArmType.Infantry, Side = BattleSide.Player1 };
+			Infantry army2 = new Infantry() { Hp = 100, Position = new System.Drawing.Point(1, 2), Side = BattleSide.Player1 };
 			a1.ApplyArmy(army2);
 
 			Hero hero1 = new Hero() { Hp = 100, Position = new System.Drawing.Point(0, 2), Type = ArmType.Hero, HeroName = "Ryo", Side = BattleSide.Player1 };
@@ -94,10 +95,10 @@ namespace WPFClient
 			mainField.Children.Add(h2);
 			armyBlocks.Add(h2);
 
-			Army army3 = new Army() { Hp = 100, Position = new System.Drawing.Point(12, 1), Type = ArmType.Cavalry, Side = BattleSide.Player2 };
+			Cavalry army3 = new Cavalry() { Hp = 100, Position = new System.Drawing.Point(12, 1), Side = BattleSide.Player2 };
 			b.ApplyArmy(army3);
 
-			Army army4 = new Army() { Hp = 100, Position = new System.Drawing.Point(12, 2), Type = ArmType.Lancer, Side = BattleSide.Player2 };
+			Lancer army4 = new Lancer() { Hp = 100, Position = new System.Drawing.Point(12, 2), Side = BattleSide.Player2 };
 			b1.ApplyArmy(army4);
 
 			Hero hero2 = new Hero() { Hp = 100, Position = new System.Drawing.Point(13, 2), Type = ArmType.Hero, HeroName = "James", Side = BattleSide.Player2 };

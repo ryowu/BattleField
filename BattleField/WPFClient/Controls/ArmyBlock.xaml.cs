@@ -53,7 +53,7 @@ namespace WPFClient.Controls
 		private void SetSide()
 		{
 			if (currentArmy.Side == BattleSide.Player1)
-				this.lblTypeName.Background = new SolidColorBrush(Color.FromArgb(255, 255, 200, 200));
+				this.lblTypeName.Background = new SolidColorBrush(Color.FromArgb(255, 100, 149, 237));
 			else
 				this.lblTypeName.Background = new SolidColorBrush(Color.FromArgb(255, 231, 231, 231));
 		}
