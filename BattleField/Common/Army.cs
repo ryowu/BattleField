@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Controls;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -10,6 +11,14 @@ namespace Common
 {
     public class Army
     {
+		private ArmyBlock block;
+
+		public ArmyBlock Block
+		{
+			get { return block; }
+			set { block = value; }
+		}
+
 		private BattleSide side;
 
 		public BattleSide Side
@@ -87,7 +96,7 @@ namespace Common
 
 		public void DoStandBy()
 		{
- 			// do nothing for now
+			this.block.PlayStandByAnime();
 			Debug.WriteLine(this.type.ToString() + " at '" + this.position.X.ToString() + "," + this.position.Y.ToString() + "' standby");
 		}
 
@@ -96,7 +105,10 @@ namespace Common
 			Debug.WriteLine(this.type.ToString() + " at '" + this.position.X.ToString() + "," + this.position.Y.ToString() + "' move to '" + newPosition.X.ToString() + "," + newPosition.Y.ToString() + "'");
 
 			if (this.action != ActionType.StandBy)
+			{
 				this.position = newPosition;
+				this.block.PlayMoveAnime(newPosition);
+			}
 		}
 
 		public void DoAttack(Army targetArmy)
@@ -122,6 +134,8 @@ namespace Common
 
 			int damage = this.atk + atkAnti + Utility.RandomNum(0, this.atkAlter);
 			targetArmy.Hp -= damage;
+
+			this.block.PlayAttackAnime(targetArmy);
 
 			Debug.WriteLine(this.type.ToString() + " at '" + this.position.X.ToString() + "," + this.position.Y.ToString() + "' attack '" + targetArmy.position.X.ToString() + "," + targetArmy.position.Y.ToString() + "' with damage:" + damage.ToString());
 		}

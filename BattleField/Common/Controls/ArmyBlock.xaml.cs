@@ -1,5 +1,4 @@
-﻿using Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,11 +9,12 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WPFClient.Controls
+namespace Common.Controls
 {
 	/// <summary>
 	/// Interaction logic for ArmyBlock.xaml
@@ -23,12 +23,28 @@ namespace WPFClient.Controls
 	{
 		private readonly Canvas parentField;
 
+		private bool focused = false;
+
+		public bool Focused
+		{
+			get { return focused; }
+			set { focused = value; }
+		}
+
 		private Army currentArmy;
 
-		public ArmyBlock(Canvas parent)
+		public Army CurrentArmy
+		{
+			get { return currentArmy; }
+		}
+
+		private DoubleAnimation blockMovingAnime;
+
+		public ArmyBlock(Canvas parent, DoubleAnimation blockMovingAnime)
 		{
 			InitializeComponent();
-			parentField = parent;
+			this.parentField = parent;
+			this.blockMovingAnime = blockMovingAnime;
 		}
 
 		public void ApplyArmy(Army arm)
@@ -41,12 +57,8 @@ namespace WPFClient.Controls
 				return;
 			}
 
-			this.Width = Constants.BLOCK_WIDTH;
-			this.Height = Constants.BLOCK_WIDTH;
-
 			SetTypeNameLabel();
 			SetHPbar();
-			SetPosition();
 			SetSide();
 		}
 
@@ -89,7 +101,7 @@ namespace WPFClient.Controls
 						break;
 					}
 			}
-			lblTypeName.Content = typeName;
+			lblTypeName.Content = currentArmy.Type.ToString();
 		}
 
 		private void SetHPbar()
@@ -108,10 +120,39 @@ namespace WPFClient.Controls
 				this.lblHP.Background = new SolidColorBrush(Color.FromArgb(255, 35, 255, 0));
 		}
 
-		private void SetPosition()
+		public void PlayMoveAnime(System.Drawing.Point newPosition)
 		{
-			Canvas.SetLeft(this, currentArmy.Position.X * (Constants.BLOCK_WIDTH + 2));
-			Canvas.SetTop(this, currentArmy.Position.Y * (Constants.BLOCK_WIDTH + 2));
+			//move vertically
+			if (Canvas.GetLeft(this) == newPosition.X * (Constants.BLOCK_WIDTH + 2))
+			{
+				blockMovingAnime.From = Canvas.GetTop(this);
+				blockMovingAnime.To = newPosition.Y * (Constants.BLOCK_WIDTH + 2);
+				blockMovingAnime.Duration = new Duration(TimeSpan.FromSeconds(0.3));
+				this.BeginAnimation(Canvas.TopProperty, blockMovingAnime);
+			}
+			else //move horizontally
+			{
+				blockMovingAnime.From = Canvas.GetLeft(this);
+				blockMovingAnime.To = newPosition.X * (Constants.BLOCK_WIDTH + 2);
+				blockMovingAnime.Duration = new Duration(TimeSpan.FromSeconds(0.3));
+				this.BeginAnimation(Canvas.LeftProperty, blockMovingAnime);
+			}
+		}
+
+		public void PlayStandByAnime()
+		{
+			blockMovingAnime.From = Canvas.GetTop(this);
+			blockMovingAnime.To = Canvas.GetTop(this);
+			blockMovingAnime.Duration = new Duration(TimeSpan.FromSeconds(0.3));
+			this.BeginAnimation(Canvas.TopProperty, blockMovingAnime);
+		}
+
+		public void PlayAttackAnime(Army enemy)
+		{
+			blockMovingAnime.From = Canvas.GetTop(this);
+			blockMovingAnime.To = Canvas.GetTop(this);
+			blockMovingAnime.Duration = new Duration(TimeSpan.FromSeconds(0.3));
+			this.BeginAnimation(Canvas.TopProperty, blockMovingAnime);
 		}
 	}
 }
