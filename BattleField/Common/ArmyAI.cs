@@ -16,6 +16,13 @@ namespace Common
 			set { armyList = value; }
 		}
 
+		private List<BattleAnime> currentAnime = new List<BattleAnime>();
+
+		public List<BattleAnime> CurrentAnime
+		{
+			get { return currentAnime; }
+		}
+
 		private int currentIndex = 0;
 
 		public ArmyAI()
@@ -25,11 +32,15 @@ namespace Common
 		public void ResetBattle()
 		{
 			armyList.Clear();
+			currentAnime.Clear();
 			currentIndex = 0;
 		}
 
 		public void DoAction()
 		{
+			//Clear current anime
+			currentAnime.Clear();
+
 			//Get current army which needs action
 			Army currentArmy = GetNextArmy();
 
@@ -60,7 +71,9 @@ namespace Common
 					if (firstTargetAmry == null)
 					{
 						//move to first target
-						currentArmy.DoMoveTo(new System.Drawing.Point(currentArmy.Position.X, currentArmy.Position.Y + deltaY));
+						System.Drawing.Point p = new System.Drawing.Point(currentArmy.Position.X, currentArmy.Position.Y + deltaY);
+						currentAnime.Add(new BattleAnime() { CurrentArmy = currentArmy, AnimeType = AnimeType.Move, FromPoint = currentArmy.Position, ToPoint = p });
+						currentArmy.DoMoveTo(p);
 					}
 					else
 						currentArmy.DoStandBy();
@@ -71,6 +84,8 @@ namespace Common
 					if (firstTargetAmry == null)
 					{
 						//move to first target
+						System.Drawing.Point p = new System.Drawing.Point(currentArmy.Position.X + deltaX, currentArmy.Position.Y);
+						currentAnime.Add(new BattleAnime() { CurrentArmy = currentArmy, AnimeType = AnimeType.Move, FromPoint = currentArmy.Position, ToPoint = p });
 						currentArmy.DoMoveTo(new System.Drawing.Point(currentArmy.Position.X + deltaX, currentArmy.Position.Y));
 					}
 					else
@@ -82,6 +97,8 @@ namespace Common
 					if (firstTargetAmry == null)
 					{
 						//move to first target
+						System.Drawing.Point p = new System.Drawing.Point(currentArmy.Position.X + deltaX, currentArmy.Position.Y);
+						currentAnime.Add(new BattleAnime() { CurrentArmy = currentArmy, AnimeType = AnimeType.Move, FromPoint = currentArmy.Position, ToPoint = p });
 						currentArmy.DoMoveTo(new System.Drawing.Point(currentArmy.Position.X + deltaX, currentArmy.Position.Y));
 					}
 					else
@@ -90,6 +107,8 @@ namespace Common
 						if (secondTargetArmy == null)
 						{
 							//move to first target
+							System.Drawing.Point p = new System.Drawing.Point(currentArmy.Position.X, currentArmy.Position.Y + deltaY);
+							currentAnime.Add(new BattleAnime() { CurrentArmy = currentArmy, AnimeType = AnimeType.Move, FromPoint = currentArmy.Position, ToPoint = p });
 							currentArmy.DoMoveTo(new System.Drawing.Point(currentArmy.Position.X, currentArmy.Position.Y + deltaY));
 						}
 						else

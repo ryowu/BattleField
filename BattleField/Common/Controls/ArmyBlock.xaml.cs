@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Common.Controls
 {
@@ -38,9 +28,12 @@ namespace Common.Controls
 
 		//private DoubleAnimation blockMovingAnime;
 
+		private DoubleAnimation hpHurtAnime;
+
 		public ArmyBlock()
 		{
 			InitializeComponent();
+			hpHurtAnime = new DoubleAnimation();
 		}
 
 		public void ApplyArmy(Army arm)
@@ -110,7 +103,11 @@ namespace Common.Controls
 		private void SetHPbar()
 		{
 			int hp = currentArmy.Hp;
-			lblHP.Width = Convert.ToInt32((double)hp / 100.0 * (double)Constants.BLOCK_WIDTH);
+			hpHurtAnime.From = lblHP.Width;
+			hpHurtAnime.To = Convert.ToInt32((double)hp / 100.0 * (double)Constants.BLOCK_WIDTH);
+			hpHurtAnime.Duration = new Duration(new TimeSpan(0, 0, 0, 0, 100));
+			lblHP.BeginAnimation(WidthProperty, hpHurtAnime);
+
 			if (hp <= 20)
 			{
 				this.lblHP.Background = new SolidColorBrush(Colors.Red);
@@ -122,40 +119,5 @@ namespace Common.Controls
 			else
 				this.lblHP.Background = new SolidColorBrush(Color.FromArgb(255, 35, 255, 0));
 		}
-
-		//public void PlayMoveAnime(System.Drawing.Point newPosition)
-		//{
-		//	//move vertically
-		//	if (Canvas.GetLeft(this) == newPosition.X * (Constants.BLOCK_WIDTH + 2))
-		//	{
-		//		blockMovingAnime.From = Canvas.GetTop(this);
-		//		blockMovingAnime.To = newPosition.Y * (Constants.BLOCK_WIDTH + 2);
-		//		blockMovingAnime.Duration = new Duration(TimeSpan.FromSeconds(0.3));
-		//		this.BeginAnimation(Canvas.TopProperty, blockMovingAnime);
-		//	}
-		//	else //move horizontally
-		//	{
-		//		blockMovingAnime.From = Canvas.GetLeft(this);
-		//		blockMovingAnime.To = newPosition.X * (Constants.BLOCK_WIDTH + 2);
-		//		blockMovingAnime.Duration = new Duration(TimeSpan.FromSeconds(0.3));
-		//		this.BeginAnimation(Canvas.LeftProperty, blockMovingAnime);
-		//	}
-		//}
-
-		//public void PlayStandByAnime()
-		//{
-		//	blockMovingAnime.From = Canvas.GetTop(this);
-		//	blockMovingAnime.To = Canvas.GetTop(this);
-		//	blockMovingAnime.Duration = new Duration(TimeSpan.FromSeconds(0.3));
-		//	this.BeginAnimation(Canvas.TopProperty, blockMovingAnime);
-		//}
-
-		//public void PlayAttackAnime(Army enemy)
-		//{
-		//	blockMovingAnime.From = Canvas.GetTop(this);
-		//	blockMovingAnime.To = Canvas.GetTop(this);
-		//	blockMovingAnime.Duration = new Duration(TimeSpan.FromSeconds(0.3));
-		//	this.BeginAnimation(Canvas.TopProperty, blockMovingAnime);
-		//}
 	}
 }

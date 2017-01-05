@@ -50,6 +50,7 @@
     <Compile Include="ArmyTypes\Cavalry.cs" />
     <Compile Include="ArmyTypes\Infantry.cs" />
     <Compile Include="ArmyTypes\Lancer.cs" />
+    <Compile Include="BattleAnime.cs" />
     <Compile Include="BattleManager.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Controls\ArmyBlock.xaml.cs">

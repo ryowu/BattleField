@@ -28,5 +28,10 @@ namespace Common
 			Random r = new Random(DateTime.Now.GetHashCode());
 			return r.Next(min, max);
 		}
+
+		public static int PointToCanvas(int pointIndex)
+		{
+			return pointIndex * Constants.BLOCK_WIDTH + 2;
+		}
 	}
 }

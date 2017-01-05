@@ -5,8 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace Common
 {
@@ -18,11 +21,13 @@ namespace Common
 		private List<ArmyBlock> armyBlocks = new List<ArmyBlock>();
 
 		public event EventHandler OnActionCompleted;
+		DoubleAnimation blockMovingAnime = new DoubleAnimation();
 
 		public BattleManager(Canvas c)
 		{
 			this.innerCanvas = c;
 			AI = new ArmyAI();
+			blockMovingAnime.Completed += OnAnimeCompleted;
 		}
 
 		public void InitializeBattle(List<Army> armyList)
@@ -45,16 +50,38 @@ namespace Common
 			AI.DoAction();
 
 			//Play anime for specific item
-			PlayAnime();
+			if (AI.CurrentAnime.Count > 0)
+				PlayAnime(AI.CurrentAnime[0]);
+			else
+				OnAnimeCompleted(null, null);
 		}
 
-		private void PlayAnime()
+		private void PlayAnime(BattleAnime ba)
 		{
-			//Animation OnCompleted leads to this method
-			OnAnimeCompleted();
+			if (ba.AnimeType == AnimeType.Move)
+			{
+				if (ba.FromPoint.X == ba.ToPoint.X)
+				{
+					blockMovingAnime.From = Canvas.GetTop(ba.CurrentArmy.Block);
+					blockMovingAnime.To = ba.ToPoint.Y * (Constants.BLOCK_WIDTH + 2);
+					blockMovingAnime.Duration = new Duration(TimeSpan.FromSeconds(0.3));
+					ba.CurrentArmy.Block.BeginAnimation(Canvas.TopProperty, blockMovingAnime);
+				}
+				else
+				{
+					blockMovingAnime.From = Canvas.GetLeft(ba.CurrentArmy.Block);
+					blockMovingAnime.To = ba.ToPoint.X * (Constants.BLOCK_WIDTH + 2);
+					blockMovingAnime.Duration = new Duration(TimeSpan.FromSeconds(0.3));
+					ba.CurrentArmy.Block.BeginAnimation(Canvas.LeftProperty, blockMovingAnime);
+				}
+			}
+			else if (ba.AnimeType == AnimeType.Attack)
+			{
+ 
+			}
 		}
 
-		private void OnAnimeCompleted()
+		private void OnAnimeCompleted(object sender, EventArgs e)
 		{
 			//Refresh all army
 			for (int i = 0; i < armyList.Count; i++)
