@@ -9,11 +9,17 @@ namespace Common
 	public class ArmyAI
 	{
 		private List<Army> armyList = new List<Army>();
+
+		public List<Army> ArmyList
+		{
+			get { return armyList; }
+			set { armyList = value; }
+		}
+
 		private int currentIndex = 0;
 
-		public ArmyAI(List<Army> armyList)
+		public ArmyAI()
 		{
-			this.armyList = armyList;
 		}
 
 		public void ResetBattle()

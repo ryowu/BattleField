@@ -26,18 +26,11 @@ namespace WPFClient
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-
-		private DoubleAnimation blockMovingAnime = new DoubleAnimation();
+		private BattleManager bm;
+		//private DoubleAnimation blockMovingAnime = new DoubleAnimation();
 
 		private DispatcherTimer timerMain = new DispatcherTimer();
-
-		private List<ArmyBlock> armyBlocks = new List<ArmyBlock>();
-
-
 		private List<Army> testArmyList = new List<Army>();
-
-
-		private ArmyAI AI;
 
 		public MainWindow()
 		{
@@ -45,61 +38,13 @@ namespace WPFClient
 			timerMain.Interval = new TimeSpan(0, 0, 0, 0, 200);
 			timerMain.Tick += timerMain_Tick;
 
-			blockMovingAnime.Completed += blockMovingAnime_Completed;
+			//blockMovingAnime.Completed += blockMovingAnime_Completed;
+
+			bm = new BattleManager(mainField);
+			bm.OnActionCompleted += bm_OnActionCompleted;
 		}
 
-		private void blockMovingAnime_Completed(object sender, EventArgs e)
-		{
-			timerMain.Start();
-		}
-
-		void timerMain_Tick(object sender, EventArgs e)
-		{
-			timerMain.Stop();
-			AI.DoAction();
-			BattleTick(testArmyList);
-		}
-
-		#region SignalR Client Methods
-
-		/// <summary>
-		/// Tick from server
-		/// </summary>
-		private void BattleTick(List<Army> armyList)
-		{
-			//Play anime for specific item
-
-			//Refresh all army
-			for (int i = 0; i < armyList.Count; i++)
-			{
-				armyBlocks[i].ApplyArmy(armyList[i]);
-
-				//set focus
-				if(armyBlocks[i].Focused)
-					SetFocusBorder(armyBlocks[i]);
-			}
-		}
-
-		#endregion
-
-		private void InitButton_Click(object sender, RoutedEventArgs e)
-		{
-			//Init AI
-			AI = new ArmyAI(testArmyList);
-			AI.ResetBattle();
-
-			InitializeBattleField();
-		}
-
-		private void Button_Click_1(object sender, RoutedEventArgs e)
-		{
-			timerMain.Start();
-		}
-
-		private void Button_Click_2(object sender, RoutedEventArgs e)
-		{
-			timerMain.Stop();
-		}
+		#region Private Methods
 
 		private void InitializeBattleField()
 		{
@@ -136,11 +81,6 @@ namespace WPFClient
 		{
 			foreach (var item in data)
 			{
-				//Create UI block
-				ArmyBlock block = new ArmyBlock(mainField, blockMovingAnime);
-				block.MouseDown += block_MouseDown;
-				mainField.Children.Add(block);
-				armyBlocks.Add(block);
 				//Create Army
 				Army a = null;
 				switch (item.Value)
@@ -171,42 +111,59 @@ namespace WPFClient
 							break;
 						}
 				}
-				a.Block = block;
 				a.Position = item.Key;
 				a.Target = enemyHero;
 				a.Side = side;
 				a.Action = ActionType.Forward;
-				block.Width = Constants.BLOCK_WIDTH;
-				block.Height = Constants.BLOCK_WIDTH;
-				Canvas.SetLeft(block, a.Position.X * (Constants.BLOCK_WIDTH + 2));
-				Canvas.SetTop(block, a.Position.Y * (Constants.BLOCK_WIDTH + 2));
-
-				//block.ApplyArmy(a);
 				testArmyList.Add(a);
 			}
 		}
 
-		private void block_MouseDown(object sender, MouseButtonEventArgs e)
+		#endregion
+
+		#region SignalR Client Methods
+
+		/// <summary>
+		/// Tick from server
+		/// </summary>
+		private void BattleTick(List<Army> armyList)
 		{
-			armyBlocks.ForEach((a) => a.Focused = false);
-			ArmyBlock ab = (ArmyBlock)sender;
-			ab.Focused = true;
-			SetFocusBorder(ab);
+			bm.DoAction();
 		}
 
-		private void SetFocusBorder(ArmyBlock ab)
-		{
-			if (ab.CurrentArmy.Hp <= 0)
-			{
-				borderFocus.Visibility = System.Windows.Visibility.Hidden;
-				return;
-			}
+		#endregion
 
-			Canvas.SetLeft(borderFocus, Canvas.GetLeft(ab) - 2);
-			Canvas.SetTop(borderFocus, Canvas.GetTop(ab) - 2);
-			Canvas.SetZIndex(borderFocus, Canvas.GetZIndex(ab) - 1);
-			//armyDetailControl.ApplyArmy(ab.CurrentArmy);
-			borderFocus.Visibility = System.Windows.Visibility.Visible;
+		#region Events
+		private void timerMain_Tick(object sender, EventArgs e)
+		{
+			//simulate server invoking
+			timerMain.Stop();
+			BattleTick(testArmyList);
 		}
+
+		private void InitButton_Click(object sender, RoutedEventArgs e)
+		{
+			InitializeBattleField();
+			bm.InitializeBattle(testArmyList);
+		}
+
+		private void Button_Click_1(object sender, RoutedEventArgs e)
+		{
+			timerMain.Start();
+		}
+
+		private void Button_Click_2(object sender, RoutedEventArgs e)
+		{
+			timerMain.Stop();
+		}
+
+		private void bm_OnActionCompleted(object sender, EventArgs e)
+		{
+			//simulate invoke server method to tell server that current action is complete
+			timerMain.Start();
+			//todo:Invoke server method
+		}
+
+		#endregion
 	}
 }

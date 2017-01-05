@@ -96,7 +96,7 @@ namespace Common
 
 		public void DoStandBy()
 		{
-			this.block.PlayStandByAnime();
+
 			Debug.WriteLine(this.type.ToString() + " at '" + this.position.X.ToString() + "," + this.position.Y.ToString() + "' standby");
 		}
 
@@ -107,7 +107,6 @@ namespace Common
 			if (this.action != ActionType.StandBy)
 			{
 				this.position = newPosition;
-				this.block.PlayMoveAnime(newPosition);
 			}
 		}
 
@@ -134,8 +133,6 @@ namespace Common
 
 			int damage = this.atk + atkAnti + Utility.RandomNum(0, this.atkAlter);
 			targetArmy.Hp -= damage;
-
-			this.block.PlayAttackAnime(targetArmy);
 
 			Debug.WriteLine(this.type.ToString() + " at '" + this.position.X.ToString() + "," + this.position.Y.ToString() + "' attack '" + targetArmy.position.X.ToString() + "," + targetArmy.position.Y.ToString() + "' with damage:" + damage.ToString());
 		}
