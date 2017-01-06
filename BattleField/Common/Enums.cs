@@ -33,4 +33,10 @@ namespace Common
 		Backward,
 		StandBy
 	}
+
+	public enum ImageDirection
+	{
+ 		LeftToRight,
+		RightToLeft
+	}
 }

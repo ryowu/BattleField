@@ -27,7 +27,6 @@ namespace WPFClient
 	public partial class MainWindow : Window
 	{
 		private BattleManager bm;
-		//private DoubleAnimation blockMovingAnime = new DoubleAnimation();
 
 		private DispatcherTimer timerMain = new DispatcherTimer();
 		private List<Army> testArmyList = new List<Army>();
@@ -37,8 +36,6 @@ namespace WPFClient
 			InitializeComponent();
 			timerMain.Interval = new TimeSpan(0, 0, 0, 0, 200);
 			timerMain.Tick += timerMain_Tick;
-
-			//blockMovingAnime.Completed += blockMovingAnime_Completed;
 
 			bm = new BattleManager(mainField);
 			bm.OnActionCompleted += bm_OnActionCompleted;
@@ -53,24 +50,28 @@ namespace WPFClient
 
 
 			Dictionary<System.Drawing.Point, ArmType> armyDataPlayer1 = new Dictionary<System.Drawing.Point, ArmType>();
-			armyDataPlayer1[new System.Drawing.Point(1, 3)] = ArmType.Archer;
-			armyDataPlayer1[new System.Drawing.Point(2, 3)] = ArmType.Infantry;
-			armyDataPlayer1[new System.Drawing.Point(3, 3)] = ArmType.Infantry;
-			armyDataPlayer1[new System.Drawing.Point(1, 2)] = ArmType.Lancer;
-			armyDataPlayer1[new System.Drawing.Point(1, 4)] = ArmType.Lancer;
-			armyDataPlayer1[new System.Drawing.Point(1, 1)] = ArmType.Cavalry;
-			armyDataPlayer1[new System.Drawing.Point(1, 5)] = ArmType.Cavalry;
-			armyDataPlayer1[new System.Drawing.Point(0, 3)] = ArmType.Hero;
+			armyDataPlayer1[new System.Drawing.Point(1, 0)] = ArmType.Archer;
+			armyDataPlayer1[new System.Drawing.Point(2, 1)] = ArmType.Infantry;
+			armyDataPlayer1[new System.Drawing.Point(3, 2)] = ArmType.Infantry;
+			armyDataPlayer1[new System.Drawing.Point(4, 3)] = ArmType.Lancer;
+			armyDataPlayer1[new System.Drawing.Point(5, 4)] = ArmType.Lancer;
+			armyDataPlayer1[new System.Drawing.Point(4, 5)] = ArmType.Cavalry;
+			armyDataPlayer1[new System.Drawing.Point(3, 6)] = ArmType.Cavalry;
+			armyDataPlayer1[new System.Drawing.Point(2, 7)] = ArmType.Cavalry;
+			armyDataPlayer1[new System.Drawing.Point(1, 8)] = ArmType.Cavalry;
+			armyDataPlayer1[new System.Drawing.Point(0, 4)] = ArmType.Hero;
 
 			Dictionary<System.Drawing.Point, ArmType> armyDataPlayer2 = new Dictionary<System.Drawing.Point, ArmType>();
-			armyDataPlayer2[new System.Drawing.Point(10, 0)] = ArmType.Cavalry;
-			armyDataPlayer2[new System.Drawing.Point(10, 1)] = ArmType.Cavalry;
+			armyDataPlayer2[new System.Drawing.Point(15, 0)] = ArmType.Archer;
+			armyDataPlayer2[new System.Drawing.Point(14, 1)] = ArmType.Infantry;
 			armyDataPlayer2[new System.Drawing.Point(13, 2)] = ArmType.Infantry;
-			armyDataPlayer2[new System.Drawing.Point(15, 3)] = ArmType.Archer;
-			armyDataPlayer2[new System.Drawing.Point(11, 4)] = ArmType.Infantry;
-			armyDataPlayer2[new System.Drawing.Point(15, 5)] = ArmType.Lancer;
-			armyDataPlayer2[new System.Drawing.Point(15, 6)] = ArmType.Lancer;
-			armyDataPlayer2[new System.Drawing.Point(13, 3)] = ArmType.Hero;
+			armyDataPlayer2[new System.Drawing.Point(12, 3)] = ArmType.Lancer;
+			armyDataPlayer2[new System.Drawing.Point(11, 4)] = ArmType.Lancer;
+			armyDataPlayer2[new System.Drawing.Point(12, 5)] = ArmType.Cavalry;
+			armyDataPlayer2[new System.Drawing.Point(13, 6)] = ArmType.Cavalry;
+			armyDataPlayer2[new System.Drawing.Point(14, 7)] = ArmType.Cavalry;
+			armyDataPlayer2[new System.Drawing.Point(15, 8)] = ArmType.Cavalry;
+			armyDataPlayer2[new System.Drawing.Point(16, 4)] = ArmType.Hero;
 
 
 			InitializePlayer(armyDataPlayer1, BattleSide.Player1, hero1, hero2);

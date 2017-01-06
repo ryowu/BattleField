@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 
 namespace Common.Controls
 {
@@ -11,6 +12,8 @@ namespace Common.Controls
 	/// </summary>
 	public partial class ArmyBlock : UserControl
 	{
+
+
 		private bool focused = false;
 
 		public bool Focused
@@ -46,7 +49,7 @@ namespace Common.Controls
 				return;
 			}
 
-			SetTypeNameLabel();
+			SetTypeImage();
 			SetHPbar();
 			SetSide();
 			SetPosition();
@@ -61,43 +64,18 @@ namespace Common.Controls
 		private void SetSide()
 		{
 			if (currentArmy.Side == BattleSide.Player1)
-				this.lblTypeName.Background = new SolidColorBrush(Color.FromArgb(255, 100, 149, 237));
+				this.lblTypeName.Background = new SolidColorBrush(Color.FromArgb(255, 112, 146, 190));
 			else
 				this.lblTypeName.Background = new SolidColorBrush(Color.FromArgb(255, 231, 231, 231));
 		}
 
-		private void SetTypeNameLabel()
+		private void SetTypeImage()
 		{
-			string typeName = string.Empty;
-			switch (currentArmy.Type)
+			imgArmy.Source = ImageManager.Instance.GetArmyImage(currentArmy.Type, currentArmy.Side == BattleSide.Player1 ? ImageDirection.LeftToRight : ImageDirection.RightToLeft);
+			if (currentArmy.Type == ArmType.Hero)
 			{
-				case ArmType.Archer:
-					{
-						typeName = "弓箭手";
-						break;
-					}
-				case ArmType.Cavalry:
-					{
-						typeName = "骑兵";
-						break;
-					}
-				case ArmType.Infantry:
-					{
-						typeName = "步兵";
-						break;
-					}
-				case ArmType.Lancer:
-					{
-						typeName = "枪兵";
-						break;
-					}
-				case ArmType.Hero:
-					{
-						typeName = ((Hero)currentArmy).HeroName;
-						break;
-					}
+				lblTypeName.Content = "武将";
 			}
-			lblTypeName.Content = typeName;
 		}
 
 		private void SetHPbar()

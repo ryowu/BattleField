@@ -8,7 +8,9 @@
     <Grid>
         <Border x:Name="hpBorder" BorderBrush="#FF515151" BorderThickness="1" Height="6" VerticalAlignment="Top"/>
         <Label x:Name="lblHP" Content="" VerticalAlignment="Top" Background="#FF23FF00" Height="5" HorizontalAlignment="Left" Width="48"/>
-        <Label x:Name="lblTypeName" Content="兵种" Margin="0,6,0,0"/>
+        <Label x:Name="lblTypeName" Content="" Margin="0,6,0,0"/>
         <Border x:Name="mainBorder" BorderBrush="#FF515151" BorderThickness="1"/>
+        <Image x:Name="imgArmy" Margin="0,5,0,0" Stretch="Fill"/>
+        <Image x:Name="imgArmy_Copy" Margin="0,5,-422,-145" Stretch="Fill" Source="/Common;component/Resources/warsongstyle.png" Visibility="Hidden" Height="189" VerticalAlignment="Top" HorizontalAlignment="Left" Width="467"/>
     </Grid>
 </UserControl>
