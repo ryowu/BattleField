@@ -25,11 +25,17 @@ namespace Common
 		private BitmapImage armyImage = new BitmapImage();
 		private TransformedBitmap reversedArmyImage;
 
+		private BitmapImage arrowImage = new BitmapImage();
+
 		private ImageManager()
 		{
 			armyImage.BeginInit();
 			armyImage.UriSource = new Uri("pack://application:,,,/Common;component/Resources/warsongstyle.png");
 			armyImage.EndInit();
+
+			arrowImage.BeginInit();
+			arrowImage.UriSource = new Uri("pack://application:,,,/Common;component/Resources/arrows.png");
+			arrowImage.EndInit();
 
 			reversedArmyImage = new TransformedBitmap();
 			reversedArmyImage.BeginInit();
@@ -84,6 +90,11 @@ namespace Common
 			}
 
 			return cb;
+		}
+
+		public CroppedBitmap GetArrowImage(Direction d)
+		{
+			return null;
 		}
 	}
 }

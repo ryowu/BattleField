@@ -34,52 +34,69 @@ namespace WPFClient
 		public MainWindow()
 		{
 			InitializeComponent();
-			timerMain.Interval = new TimeSpan(0, 0, 0, 0, 200);
+			timerMain.Interval = new TimeSpan(0, 0, 0, 0, 10);
 			timerMain.Tick += timerMain_Tick;
 
 			bm = new BattleManager(mainField);
 			bm.OnActionCompleted += bm_OnActionCompleted;
+			bm.OnBlockSelected += bm_OnBlockSelected;
 		}
 
 		#region Private Methods
 
 		private void InitializeBattleField()
 		{
-			Hero hero1 = new Hero() { Hp = 100, Position = new System.Drawing.Point(0, 2), Type = ArmType.Hero, HeroName = "Ryo", Side = BattleSide.Player1 };
-			Hero hero2 = new Hero() { Hp = 100, Position = new System.Drawing.Point(13, 2), Type = ArmType.Hero, HeroName = "James", Side = BattleSide.Player2 };
-
-
 			Dictionary<System.Drawing.Point, ArmType> armyDataPlayer1 = new Dictionary<System.Drawing.Point, ArmType>();
-			armyDataPlayer1[new System.Drawing.Point(1, 0)] = ArmType.Archer;
-			armyDataPlayer1[new System.Drawing.Point(2, 1)] = ArmType.Infantry;
-			armyDataPlayer1[new System.Drawing.Point(3, 2)] = ArmType.Infantry;
+			//armyDataPlayer1[new System.Drawing.Point(1, 0)] = ArmType.Archer;
+			//armyDataPlayer1[new System.Drawing.Point(2, 1)] = ArmType.Infantry;
+			//armyDataPlayer1[new System.Drawing.Point(3, 2)] = ArmType.Infantry;
 			armyDataPlayer1[new System.Drawing.Point(4, 3)] = ArmType.Lancer;
 			armyDataPlayer1[new System.Drawing.Point(5, 4)] = ArmType.Lancer;
 			armyDataPlayer1[new System.Drawing.Point(4, 5)] = ArmType.Cavalry;
-			armyDataPlayer1[new System.Drawing.Point(3, 6)] = ArmType.Cavalry;
-			armyDataPlayer1[new System.Drawing.Point(2, 7)] = ArmType.Cavalry;
-			armyDataPlayer1[new System.Drawing.Point(1, 8)] = ArmType.Cavalry;
+			//armyDataPlayer1[new System.Drawing.Point(3, 6)] = ArmType.Cavalry;
+			//armyDataPlayer1[new System.Drawing.Point(2, 7)] = ArmType.Cavalry;
+			//armyDataPlayer1[new System.Drawing.Point(1, 8)] = ArmType.Cavalry;
 			armyDataPlayer1[new System.Drawing.Point(0, 4)] = ArmType.Hero;
 
 			Dictionary<System.Drawing.Point, ArmType> armyDataPlayer2 = new Dictionary<System.Drawing.Point, ArmType>();
-			armyDataPlayer2[new System.Drawing.Point(15, 0)] = ArmType.Archer;
-			armyDataPlayer2[new System.Drawing.Point(14, 1)] = ArmType.Infantry;
-			armyDataPlayer2[new System.Drawing.Point(13, 2)] = ArmType.Infantry;
+			//armyDataPlayer2[new System.Drawing.Point(15, 0)] = ArmType.Archer;
+			//armyDataPlayer2[new System.Drawing.Point(14, 1)] = ArmType.Infantry;
+			//armyDataPlayer2[new System.Drawing.Point(13, 2)] = ArmType.Infantry;
 			armyDataPlayer2[new System.Drawing.Point(12, 3)] = ArmType.Lancer;
 			armyDataPlayer2[new System.Drawing.Point(11, 4)] = ArmType.Lancer;
 			armyDataPlayer2[new System.Drawing.Point(12, 5)] = ArmType.Cavalry;
-			armyDataPlayer2[new System.Drawing.Point(13, 6)] = ArmType.Cavalry;
-			armyDataPlayer2[new System.Drawing.Point(14, 7)] = ArmType.Cavalry;
-			armyDataPlayer2[new System.Drawing.Point(15, 8)] = ArmType.Cavalry;
+			//armyDataPlayer2[new System.Drawing.Point(13, 6)] = ArmType.Cavalry;
+			//armyDataPlayer2[new System.Drawing.Point(14, 7)] = ArmType.Cavalry;
+			//armyDataPlayer2[new System.Drawing.Point(15, 8)] = ArmType.Cavalry;
 			armyDataPlayer2[new System.Drawing.Point(16, 4)] = ArmType.Hero;
 
 
-			InitializePlayer(armyDataPlayer1, BattleSide.Player1, hero1, hero2);
-			InitializePlayer(armyDataPlayer2, BattleSide.Player2, hero2, hero1);
+			Army hero1 = InitializePlayer(armyDataPlayer1, BattleSide.Player1);
+			Army hero2 = InitializePlayer(armyDataPlayer2, BattleSide.Player2);
+
+			testArmyList.ForEach((al) =>
+				{
+					//Use hero property
+					if (al.Side == BattleSide.Player1)
+					{
+						al.Atk = hero1.Atk;
+						al.Def = hero1.Def;
+						al.AtkAlter = hero1.AtkAlter;
+						al.Target = (Hero)hero2;
+					}
+					else
+					{
+						al.Atk = hero2.Atk;
+						al.Def = hero2.Def;
+						al.AtkAlter = hero2.AtkAlter;
+						al.Target = (Hero)hero1;
+					}
+				});
 		}
 
-		private void InitializePlayer(Dictionary<System.Drawing.Point, ArmType> data, BattleSide side, Hero myHero, Hero enemyHero)
+		private Army InitializePlayer(Dictionary<System.Drawing.Point, ArmType> data, BattleSide side)
 		{
+			Army result = null;
 			foreach (var item in data)
 			{
 				//Create Army
@@ -108,16 +125,21 @@ namespace WPFClient
 						}
 					case ArmType.Hero:
 						{
-							a = myHero;
+							a = new Hero();
+							result = a;
 							break;
 						}
 				}
 				a.Position = item.Key;
-				a.Target = enemyHero;
 				a.Side = side;
-				a.Action = ActionType.Forward;
+
+				if (item.Value == ArmType.Hero)
+					a.Action = ActionType.StandBy;
+				else
+					a.Action = ActionType.Forward;
 				testArmyList.Add(a);
 			}
+			return result;
 		}
 
 		#endregion
@@ -165,6 +187,10 @@ namespace WPFClient
 			//todo:Invoke server method
 		}
 
+		private void bm_OnBlockSelected(object sender, EventArgs e)
+		{
+			armyDetailControl.ApplyArmy(((ArmyBlock)sender).CurrentArmy);
+		}
 		#endregion
 	}
 }

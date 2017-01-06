@@ -61,14 +61,15 @@ namespace Common
 
 			if (targetArmyForAttack != null)
 			{
-				currentArmy.DoAttack(targetArmyForAttack);
+				int damage = currentArmy.DoAttack(targetArmyForAttack);
+				currentAnime.Add(new BattleAnime() { CurrentArmy = currentArmy, AnimeType = AnimeType.Attack, FromPoint = currentArmy.Position, ToPoint = targetArmyForAttack.Position, TargetArmy = targetArmyForAttack, Value1 = damage });
 			}
 			else // if not attack, try move
 			{
 				if (deltaX == 0 && deltaY != 0)
 				{
 					firstTargetAmry = GetArmyByPosition(currentArmy.Position.X, currentArmy.Position.Y + deltaY);
-					if (firstTargetAmry == null)
+					if (firstTargetAmry == null && currentArmy.Action != ActionType.StandBy)
 					{
 						//move to first target
 						System.Drawing.Point p = new System.Drawing.Point(currentArmy.Position.X, currentArmy.Position.Y + deltaY);
@@ -81,7 +82,7 @@ namespace Common
 				else if (deltaX != 0 && deltaY == 0)
 				{
 					firstTargetAmry = GetArmyByPosition(currentArmy.Position.X + deltaX, currentArmy.Position.Y);
-					if (firstTargetAmry == null)
+					if (firstTargetAmry == null && currentArmy.Action != ActionType.StandBy)
 					{
 						//move to first target
 						System.Drawing.Point p = new System.Drawing.Point(currentArmy.Position.X + deltaX, currentArmy.Position.Y);
@@ -94,7 +95,7 @@ namespace Common
 				else //deltax&y !=0
 				{
 					firstTargetAmry = GetArmyByPosition(currentArmy.Position.X + deltaX, currentArmy.Position.Y);
-					if (firstTargetAmry == null)
+					if (firstTargetAmry == null && currentArmy.Action != ActionType.StandBy)
 					{
 						//move to first target
 						System.Drawing.Point p = new System.Drawing.Point(currentArmy.Position.X + deltaX, currentArmy.Position.Y);
@@ -104,7 +105,7 @@ namespace Common
 					else
 					{
 						secondTargetArmy = GetArmyByPosition(currentArmy.Position.X, currentArmy.Position.Y + deltaY);
-						if (secondTargetArmy == null)
+						if (secondTargetArmy == null && currentArmy.Action != ActionType.StandBy)
 						{
 							//move to first target
 							System.Drawing.Point p = new System.Drawing.Point(currentArmy.Position.X, currentArmy.Position.Y + deltaY);

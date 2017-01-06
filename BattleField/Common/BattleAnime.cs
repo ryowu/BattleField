@@ -17,6 +17,14 @@ namespace Common
 			set { currentArmy = value; }
 		}
 
+		private Army targetArmy;
+
+		public Army TargetArmy
+		{
+			get { return targetArmy; }
+			set { targetArmy = value; }
+		}
+
 		private AnimeType animeType;
 
 		public AnimeType AnimeType
@@ -39,6 +47,14 @@ namespace Common
 		{
 			get { return toPoint; }
 			set { toPoint = value; }
+		}
+
+		private int value1;
+
+		public int Value1
+		{
+			get { return value1; }
+			set { value1 = value; }
 		}
 	}
 }

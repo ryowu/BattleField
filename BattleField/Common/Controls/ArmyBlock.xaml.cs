@@ -57,8 +57,8 @@ namespace Common.Controls
 
 		private void SetPosition()
 		{
-			Canvas.SetLeft(this, currentArmy.Position.X * (Constants.BLOCK_WIDTH + 2));
-			Canvas.SetTop(this, currentArmy.Position.Y * (Constants.BLOCK_WIDTH + 2));
+			Canvas.SetLeft(this, 2 + currentArmy.Position.X * (Constants.BLOCK_WIDTH + 2));
+			Canvas.SetTop(this, 2 + currentArmy.Position.Y * (Constants.BLOCK_WIDTH + 2));
 		}
 
 		private void SetSide()

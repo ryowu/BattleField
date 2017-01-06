@@ -39,4 +39,12 @@ namespace Common
  		LeftToRight,
 		RightToLeft
 	}
+
+	public enum Direction
+	{
+ 		Up,
+		Down,
+		Left,
+		Right
+	}
 }
