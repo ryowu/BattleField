@@ -34,7 +34,7 @@ namespace Common
 			armyImage.EndInit();
 
 			arrowImage.BeginInit();
-			arrowImage.UriSource = new Uri("pack://application:,,,/Common;component/Resources/arrows.png");
+			arrowImage.UriSource = new Uri("pack://application:,,,/Common;component/Resources/smallbullet.png");
 			arrowImage.EndInit();
 
 			reversedArmyImage = new TransformedBitmap();
@@ -92,9 +92,9 @@ namespace Common
 			return cb;
 		}
 
-		public CroppedBitmap GetArrowImage(Direction d)
+		public BitmapImage GetArrowImage()
 		{
-			return null;
+			return arrowImage;
 		}
 	}
 }

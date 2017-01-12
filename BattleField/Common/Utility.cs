@@ -31,7 +31,7 @@ namespace Common
 
 		public static int PointToCanvas(int pointIndex)
 		{
-			return pointIndex * Constants.BLOCK_WIDTH + 2;
+			return 2 + pointIndex * (Constants.BLOCK_WIDTH + 2);
 		}
 	}
 }

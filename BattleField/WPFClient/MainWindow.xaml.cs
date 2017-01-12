@@ -47,27 +47,27 @@ namespace WPFClient
 		private void InitializeBattleField()
 		{
 			Dictionary<System.Drawing.Point, ArmType> armyDataPlayer1 = new Dictionary<System.Drawing.Point, ArmType>();
-			//armyDataPlayer1[new System.Drawing.Point(1, 0)] = ArmType.Archer;
-			//armyDataPlayer1[new System.Drawing.Point(2, 1)] = ArmType.Infantry;
-			//armyDataPlayer1[new System.Drawing.Point(3, 2)] = ArmType.Infantry;
-			armyDataPlayer1[new System.Drawing.Point(4, 3)] = ArmType.Lancer;
-			armyDataPlayer1[new System.Drawing.Point(5, 4)] = ArmType.Lancer;
-			armyDataPlayer1[new System.Drawing.Point(4, 5)] = ArmType.Cavalry;
-			//armyDataPlayer1[new System.Drawing.Point(3, 6)] = ArmType.Cavalry;
-			//armyDataPlayer1[new System.Drawing.Point(2, 7)] = ArmType.Cavalry;
-			//armyDataPlayer1[new System.Drawing.Point(1, 8)] = ArmType.Cavalry;
+			armyDataPlayer1[new System.Drawing.Point(1, 0)] = ArmType.Cavalry;
+			armyDataPlayer1[new System.Drawing.Point(2, 1)] = ArmType.Archer;
+			armyDataPlayer1[new System.Drawing.Point(3, 2)] = ArmType.Infantry;
+			armyDataPlayer1[new System.Drawing.Point(4, 3)] = ArmType.Infantry;
+			armyDataPlayer1[new System.Drawing.Point(5, 4)] = ArmType.Infantry;
+			armyDataPlayer1[new System.Drawing.Point(4, 5)] = ArmType.Infantry;
+			armyDataPlayer1[new System.Drawing.Point(3, 6)] = ArmType.Infantry;
+			armyDataPlayer1[new System.Drawing.Point(2, 7)] = ArmType.Archer;
+			armyDataPlayer1[new System.Drawing.Point(1, 8)] = ArmType.Cavalry;
 			armyDataPlayer1[new System.Drawing.Point(0, 4)] = ArmType.Hero;
 
 			Dictionary<System.Drawing.Point, ArmType> armyDataPlayer2 = new Dictionary<System.Drawing.Point, ArmType>();
-			//armyDataPlayer2[new System.Drawing.Point(15, 0)] = ArmType.Archer;
-			//armyDataPlayer2[new System.Drawing.Point(14, 1)] = ArmType.Infantry;
-			//armyDataPlayer2[new System.Drawing.Point(13, 2)] = ArmType.Infantry;
-			armyDataPlayer2[new System.Drawing.Point(12, 3)] = ArmType.Lancer;
-			armyDataPlayer2[new System.Drawing.Point(11, 4)] = ArmType.Lancer;
-			armyDataPlayer2[new System.Drawing.Point(12, 5)] = ArmType.Cavalry;
-			//armyDataPlayer2[new System.Drawing.Point(13, 6)] = ArmType.Cavalry;
-			//armyDataPlayer2[new System.Drawing.Point(14, 7)] = ArmType.Cavalry;
-			//armyDataPlayer2[new System.Drawing.Point(15, 8)] = ArmType.Cavalry;
+			armyDataPlayer2[new System.Drawing.Point(15, 0)] = ArmType.Cavalry;
+			armyDataPlayer2[new System.Drawing.Point(14, 1)] = ArmType.Archer;
+			armyDataPlayer2[new System.Drawing.Point(13, 2)] = ArmType.Infantry;
+			armyDataPlayer2[new System.Drawing.Point(12, 3)] = ArmType.Infantry;
+			armyDataPlayer2[new System.Drawing.Point(11, 4)] = ArmType.Infantry;
+			armyDataPlayer2[new System.Drawing.Point(12, 5)] = ArmType.Infantry;
+			armyDataPlayer2[new System.Drawing.Point(13, 6)] = ArmType.Infantry;
+			armyDataPlayer2[new System.Drawing.Point(14, 7)] = ArmType.Archer;
+			armyDataPlayer2[new System.Drawing.Point(15, 8)] = ArmType.Cavalry;
 			armyDataPlayer2[new System.Drawing.Point(16, 4)] = ArmType.Hero;
 
 
@@ -161,6 +161,11 @@ namespace WPFClient
 		{
 			//simulate server invoking
 			timerMain.Stop();
+			BattleTick(testArmyList);
+		}
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
 			BattleTick(testArmyList);
 		}
 
